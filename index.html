@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalkyToast & Friends 🍞🎤</title>
+    <style>
+        :root {
+            --pink: #FFD1DC;
+            --yellow: #FFFACD;
+            --white: #FFFFFF;
+            --text-dark: #5c4a4d;
+            --accent: #ff8fab;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--yellow);
+            color: var(--text-dark);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Pulsing effect for the last 10 seconds */
+        .warning-pulse {
+            animation: pulse-bg 1s infinite alternate;
+        }
+        @keyframes pulse-bg {
+            0% { background-color: var(--yellow); }
+            100% { background-color: #ffc4d3; }
+        }
+
+        .lab-card {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(255, 143, 171, 0.2);
+            border: 4px solid var(--pink);
+            position: relative;
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+
+        .mascots {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 🆕 Instruction Box Styling */
+        #instruction-box {
+            background-color: #fffdf2;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0 25px 0;
+            text-align: left;
+            border: 2px solid var(--yellow);
+            transition: opacity 0.3s ease;
+        }
+
+        h2.step-title {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-top: 0;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .instruction-step {
+            margin-bottom: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .step-number {
+            background-color: var(--pink);
+            color: var(--text-dark);
+            border-radius: 50%;
+            min-width: 24px;
+            height: 24px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .topic-box {
+            background-color: var(--yellow);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            border: 2px dashed var(--accent);
+            display: none; /* Hidden initially */
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        button {
+            background-color: var(--pink);
+            color: var(--text-dark);
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 209, 220, 0.8);
+            transition: all 0.2s;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            transform: scale(1.05) rotate(-1deg);
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 20px 0;
+            display: none;
+        }
+
+        .status-text {
+            font-size: 1.1rem;
+            color: #8fa0b5;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #copy-ai-btn {
+            background-color: #82d4bb;
+            color: white;
+            display: none;
+        }
+        #copy-ai-btn:hover { background-color: #5ab599; }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="lab-card">
+        <div class="mascots" id="mascot">🍞🎤</div>
+        <h1>TalkyToast Lab</h1>
+        <p class="status-text" id="status">Ready to level up your English?</p>
+
+        <div id="instruction-box">
+            <h2 class="step-title">✨ How to Play ✨</h2>
+            <div class="instruction-step"><span class="step-number">1</span> 💡 Get your challenge topic.</div>
+            <div class="instruction-step"><span class="step-number">2</span> 📼 Grab your OTHER phone to record!</div>
+            <div class="instruction-step"><span class="step-number">3</span> ⏱️ Start recording & the timer. Speak!</div>
+            <div class="instruction-step"><span class="step-number">4</span> 🤖 Ask an AI tool to listen & give feedback!</div>
+        </div>
+
+        <button id="gacha-btn" onclick="drawTopic()">Draw a Topic Capsule! 🔴</button>
+
+        <div class="topic-box" id="topic-display"></div>
+
+        <div class="timer-display" id="timer">15</div>
+
+        <button id="copy-ai-btn" onclick="copyPrompt()">📋 Copy AI Feedback Prompt</button>
+
+        <p class="footer-note">Hit draw, think for 15s, then speak for 60s! 📱</p>
+    </div>
+
+    <script>
+        const topics = [
+            "Describe your perfect weekend morning.",
+            "How would you entertain a group of kids on a rainy day?",
+            "If you could open a cute cafe, what would it sell?",
+            "Talk about a time you learned something completely new.",
+            "What are your top three tips for staying organized?",
+            "Describe the plot of your favorite movie as fast as you can.",
+            "If you had to live in another country for a year, where would it be?"
+        ];
+
+        let currentTopic = "";
+        let countdown;
+        let timeLeft = 0;
+        let phase = "idle"; 
+
+        const statusEl = document.getElementById('status');
+        const gachaBtn = document.getElementById('gacha-btn');
+        const topicBox = document.getElementById('topic-display');
+        const timerEl = document.getElementById('timer');
+        const copyBtn = document.getElementById('copy-ai-btn');
+        const bodyEl = document.body;
+        const mascotEl = document.getElementById('mascot');
+        const instructionBox = document.getElementById('instruction-box'); // 🆕 Grab the instruction box
+
+        function drawTopic() {
+            // Reset everything
+            clearInterval(countdown);
+            bodyEl.classList.remove('warning-pulse');
+            copyBtn.style.display = 'none';
+            
+            // 🆕 Hide the instructions to make room for the timer
+            instructionBox.style.display = 'none';
+            
+            // Pick Topic
+            currentTopic = topics[Math.floor(Math.random() * topics.length)];
+            topicBox.innerText = currentTopic;
+            topicBox.style.display = 'flex';
+            
+            gachaBtn.style.display = 'none';
+            timerEl.style.display = 'block';
+            mascotEl.innerText = "🤔💭";
+
+            startPrepTimer();
+        }
+
+        function startPrepTimer() {
+            phase = "prep";
+            timeLeft = 15;
+            statusEl.innerText = "Think Time! Gather your thoughts...";
+            timerEl.style.color = "#8fa0b5"; 
+            timerEl.innerText = timeLeft;
+
+            countdown = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    startSpeakingTimer();
+                }
+            }, 1000);
+        }
+
+        function startSpeakingTimer() {
+            phase = "speak";
+            timeLeft = 60;
+            statusEl.innerText = "🔴 RECORDING! Speak now!";
+            timerEl.style.color = "var(--accent)";
+            timerEl.innerText = timeLeft;
+            mascotEl.innerText = "🍞🎤";
+
+            countdown = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+
+                // 10 second warning pulse
+                if (timeLeft === 10) {
+                    bodyEl.classList.add('warning-pulse');
+                    mascotEl.innerText = "⏰🔥";
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    finishChallenge();
+                }
+            }, 1000);
+        }
+
+        function finishChallenge() {
+            bodyEl.classList.remove('warning-pulse');
+            statusEl.innerText = "Mission Complete! 🌟";
+            timerEl.style.display = 'none';
+            copyBtn.style.display = 'block';
+            gachaBtn.style.display = 'block';
+            gachaBtn.innerText = "Draw Another Capsule! 🔵";
+            mascotEl.innerText = "🎉🍞";
+        }
+
+        function copyPrompt() {
+            const promptText = `I just did a 60-second speaking practice on the topic: "${currentTopic}". Here is my transcript. Please: 1. Correct my grammar. 2. Suggest 3 'level-up' vocabulary words. 3. Rate my clarity out of 10. 4. Give me one 'Homework Challenge' based on my mistakes.`;
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                copyBtn.innerText = "✅ Copied! Paste into your AI!";
+                setTimeout(() => {
+                    copyBtn.innerText = "📋 Copy AI Feedback Prompt";
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+  </html>
+  

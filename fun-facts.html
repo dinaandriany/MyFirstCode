@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Fun Facts 🎉</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: rgba(255, 255, 255, 0.08);
+      --text: #f7f7ff;
+      --accent: #86e3ce;
+      --accent2: #f6a5c0;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at top, #2b2f4a 0%, var(--bg) 70%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(540px, 100%);
+      padding: 32px;
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(14px);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.9rem, 4vw, 2.5rem);
+      letter-spacing: 0.02em;
+    }
+
+    p.subtitle {
+      margin: 0 0 28px;
+      color: rgba(247, 247, 255, 0.72);
+      font-size: 1rem;
+    }
+
+    .fact {
+      margin: 0;
+      padding: 22px 24px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      font-size: 1.25rem;
+      line-height: 1.55;
+      min-height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fact::before {
+      content: "\201C";
+      position: absolute;
+      top: 12px;
+      left: 18px;
+      font-size: 3.2rem;
+      opacity: 0.18;
+    }
+
+    button {
+      margin-top: 24px;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 999px;
+      font-size: 1.07rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0b1220;
+      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.3);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 45px rgba(0, 0, 0, 0.38);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 14px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .credit {
+      margin-top: 18px;
+      font-size: 0.85rem;
+      color: rgba(247, 247, 255, 0.54);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <h1>Random Fun Facts 🎲</h1>
+    <p class="subtitle">Click the button to reveal a new fun fact (or hit refresh).</p>
+
+    <p class="fact" id="fact">Loading a fun fact...</p>
+
+    <button id="nextFactBtn" type="button">Show me another fact</button>
+
+    <p class="credit">Fact list curated from playful trivia; refresh for more fun!</p>
+  </main>
+
+  <script>
+    const facts = [
+      "Honey never spoils. Archaeologists have eaten 3,000-year-old honey and it was still edible.",
+      "Octopuses have three hearts and blue blood.",
+      "A day on Venus is longer than a year on Venus.",
+      "Bananas are berries, but strawberries aren't.",
+      "There are more possible iterations of a game of chess than atoms in the known universe.",
+      "Wombat poop is cube-shaped so it doesn't roll away.",
+      "A single strand of spaghetti is called a 'spaghetto'.",
+      "The Eiffel Tower can be 15 cm taller during the summer due to thermal expansion.",
+      "Koalas sleep up to 22 hours a day.",
+      "The shortest war in history lasted 38 minutes (between Britain and Zanzibar, 1896).",
+      "Some turtles can breathe through their butts (called cloacal respiration).",
+      "Cleopatra lived closer in time to the first Moon landing than to the building of the Great Pyramid of Giza.",
+      "The word 'nerd' was first coined by Dr. Seuss in 1950.",
+      "A group of flamingos is called a 'flamboyance'.",
+      "There is a species of jellyfish that is effectively immortal (Turritopsis dohrnii)."
+    ];
+
+    const factEl = document.getElementById('fact');
+    const nextBtn = document.getElementById('nextFactBtn');
+
+    function pickRandomFact() {
+      const index = Math.floor(Math.random() * facts.length);
+      factEl.textContent = facts[index];
+    }
+
+    nextBtn.addEventListener('click', () => {
+      pickRandomFact();
+      nextBtn.blur();
+    });
+
+    // Pick an initial fact on load
+    pickRandomFact();
+  </script>
+</body>
+</html>
